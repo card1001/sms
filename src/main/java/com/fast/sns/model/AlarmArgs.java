@@ -1,2 +1,14 @@
-package com.fast.sns.model;public class AlarmArgs {
+package com.fast.sns.model;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class AlarmArgs {
+    // user who occur alarm
+    private Integer fromUserId;
+    private Integer targetId;
 }

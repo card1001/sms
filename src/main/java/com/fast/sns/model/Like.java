@@ -1,6 +1,7 @@
 package com.fast.sns.model;
 
-import com.fast.sns.model.entity.AlarmEntity;
+
+import com.fast.sns.model.entity.LikeEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -8,28 +9,21 @@ import java.sql.Timestamp;
 
 @Getter
 @AllArgsConstructor
-public class Alarm {
-    private Integer id = null;
-
-    private AlarmType alarmType;
-
-    private AlarmArgs args;
-
+public class Like {
+    private Integer id;
+    private Integer userId;
+    private String userName;
+    private Integer postId;
     private Timestamp registeredAt;
-
     private Timestamp updatedAt;
-
     private Timestamp removedAt;
 
-    public String getAlarmText() {
-        return alarmType.getAlarmText();
-    }
-
-    public static Alarm fromEntity(AlarmEntity entity) {
-        return new Alarm(
+    public static Like fromEntity(LikeEntity entity) {
+        return new Like(
                 entity.getId(),
-                entity.getAlarmType(),
-                entity.getArgs(),
+                entity.getUser().getId(),
+                entity.getUser().getUserName(),
+                entity.getPost().getId(),
                 entity.getRegisteredAt(),
                 entity.getUpdatedAt(),
                 entity.getRemovedAt()

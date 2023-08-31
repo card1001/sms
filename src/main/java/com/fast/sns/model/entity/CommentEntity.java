@@ -1,40 +1,48 @@
 package com.fast.sns.model.entity;
 
-import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
+import jakarta.persistence.*;
 import java.sql.Timestamp;
 import java.time.Instant;
 
-@Getter
 @Setter
+@Getter
 @Entity
-@Table(name="\"like\"")
-@SQLDelete(sql="UPDATE \"like\" SET deleted_at = NOW() where id=?")
-@Where(clause = "deleted_at is NULL")
+@Table(name = "\"comment\"")
+@SQLDelete(sql = "UPDATE \"comment\" SET removed_at = NOW() WHERE id=?")
+@Where(clause = "removed_at is NULL")
 @NoArgsConstructor
-public class LikeEntity {
+public class CommentEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Integer id = null;
+
+    @Column(name = "comment")
+    private String comment;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private UserEntity user;
+
     @ManyToOne
     @JoinColumn(name = "post_id")
     private PostEntity post;
+
     @Column(name = "registered_at")
     private Timestamp registeredAt;
 
     @Column(name = "updated_at")
     private Timestamp updatedAt;
 
-    @Column(name = "deleted_at")
-    private Timestamp deletedAt;
+    @Column(name = "removed_at")
+    private Timestamp removedAt;
+
 
     @PrePersist
     void registeredAt() {
@@ -46,10 +54,11 @@ public class LikeEntity {
         this.updatedAt = Timestamp.from(Instant.now());
     }
 
-    public static LikeEntity of(UserEntity userEntity, PostEntity postEntity){
-        LikeEntity entity = new LikeEntity();
-        entity.setUser(userEntity);
-        entity.setPost(postEntity);
+    public static CommentEntity of(String comment, PostEntity post, UserEntity user) {
+        CommentEntity entity = new CommentEntity();
+        entity.setComment(comment);
+        entity.setPost(post);
+        entity.setUser(user);
         return entity;
     }
 }

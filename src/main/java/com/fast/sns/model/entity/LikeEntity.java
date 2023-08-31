@@ -11,32 +11,36 @@ import org.hibernate.annotations.Where;
 import java.sql.Timestamp;
 import java.time.Instant;
 
-@Getter
 @Setter
+@Getter
 @Entity
-@Table(name="\"post\"")
-@SQLDelete(sql="UPDATE \"post\" SET deleted_at = NOW() where id=?")
-@Where(clause = "deleted_at is NULL")
+@Table(name = "\"like\"")
+@SQLDelete(sql = "UPDATE \"like\" SET removed_at = NOW() WHERE id=?")
+@Where(clause = "removed_at is NULL")
 @NoArgsConstructor
-public class PostEntity {
+public class LikeEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-    @Column(name = "title")
-    private String title;
-    @Column(name = "body", columnDefinition = "TEXT")
-    private String body;
+    private Integer id = null;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private UserEntity user;
+
+    @ManyToOne
+    @JoinColumn(name = "post_id")
+    private PostEntity post;
+
     @Column(name = "registered_at")
     private Timestamp registeredAt;
 
     @Column(name = "updated_at")
     private Timestamp updatedAt;
 
-    @Column(name = "deleted_at")
-    private Timestamp deletedAt;
+    @Column(name = "removed_at")
+    private Timestamp removedAt;
+
 
     @PrePersist
     void registeredAt() {
@@ -48,11 +52,10 @@ public class PostEntity {
         this.updatedAt = Timestamp.from(Instant.now());
     }
 
-    public static PostEntity of(String title, String body, UserEntity userEntity){
-        PostEntity entity = new PostEntity();
-        entity.setTitle(title);
-        entity.setBody(body);
-        entity.setUser(userEntity);
+    public static LikeEntity of(PostEntity post, UserEntity user) {
+        LikeEntity entity = new LikeEntity();
+        entity.setPost(post);
+        entity.setUser(user);
         return entity;
     }
 }
